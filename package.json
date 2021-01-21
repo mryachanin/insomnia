@@ -1,0 +1,27 @@
+{
+  "name": "insomnia",
+  "version": "1.0.0",
+  "description": "Let's track sleep deprivation with data!",
+  "main": "app.js",
+  "type": "module",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mryachanin/insomnia.git"
+  },
+  "keywords": [
+    "fml",
+    "sleep",
+    "alzheimers"
+  ],
+  "author": "Mike Yachanin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mryachanin/insomnia/issues"
+  },
+  "homepage": "https://github.com/mryachanin/insomnia#readme"
+}
