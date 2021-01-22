@@ -1,4 +1,9 @@
 {
     "host": "",
-    "port": 0
+    "port": 0,
+    "sql_user": "",
+    "sql_password": "",
+    "sql_host": "",
+    "sql_port": 0,
+    "sql_db": ""
 }

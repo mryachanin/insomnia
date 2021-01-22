@@ -24,5 +24,10 @@ console.log(`Config contents: ${JSON.stringify(config)}`);
 
 assert.ok(config.host, `HOST is missing from config env: ${env}`);
 assert.ok(config.port, `PORT is missing from config env: ${env}`);
+assert.ok(config.sql_user, `SQL_USER is missing from config env: ${env}`);
+assert.ok(config.sql_password, `SQL_PASSWORD is missing from config env: ${env}`);
+assert.ok(config.sql_host, `SQL_HOST is missing from config env: ${env}`);
+assert.ok(config.sql_port, `SQL_PORT is missing from config env: ${env}`);
+assert.ok(config.sql_db, `SQL_DB is missing from config env: ${env}`);
 
 export default config;

@@ -4,7 +4,9 @@
   "description": "Let's track sleep deprivation with data!",
   "main": "app.js",
   "type": "module",
-  "dependencies": {},
+  "dependencies": {
+    "pg": "^8.5.1"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
