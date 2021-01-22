@@ -1,9 +1,9 @@
 import http from 'http';
+import config from './config.mjs';
 
-const PORT = 8080;
-
-http.createServer(reqHandler).listen(PORT);
-console.log(`Server started on port: ${PORT}`);
+console.log(`Starting server on host "${config.host}" and port "${config.port}"`)
+http.createServer(reqHandler).listen(config.port, config.host);
+console.log(`Server started`);
 
 function reqHandler(req, res) {
     console.log(`Received request at path: ${req.url}`);
