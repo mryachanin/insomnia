@@ -31,10 +31,11 @@ function reqHandler(req, res) {
             res.writeHead(400);
             res.end("Expected query parameter of \"quality\" to be present");
         }
-
-        sleep.rate(url.searchParams.get('quality'));
-        res.writeHead(200);
-        res.end();
+        else {
+            sleep.rate(url.searchParams.get('quality'));
+            res.writeHead(200);
+            res.end();
+        }
     }
     else {
         res.writeHead(404);
