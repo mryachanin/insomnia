@@ -14,31 +14,37 @@ function reqHandler(req, res) {
         sleep.start();
         res.writeHead(200);
         res.end();
+        return;
     }
-    else if (url.pathname == "/stop") {
+
+    if (url.pathname == "/stop") {
         sleep.stop();
         res.writeHead(200);
         res.end();
+        return;
     }
-    else if (url.pathname == "/interrupt") {
+
+    if (url.pathname == "/interrupt") {
         sleep.interrupt();
         res.writeHead(200);
         res.end();
+        return;
     }
-    else if (url.pathname == "/rate")
+
+    if (url.pathname == "/rate")
     {
         if (!url.searchParams.has('quality')) {
             res.writeHead(400);
             res.end("Expected query parameter of \"quality\" to be present");
+            return;
         }
-        else {
-            sleep.rate(url.searchParams.get('quality'));
-            res.writeHead(200);
-            res.end();
-        }
+
+        sleep.rate(url.searchParams.get('quality'));
+        res.writeHead(200);
+        res.end();
+        return;
     }
-    else {
-        res.writeHead(404);
-        res.end("Resource not found");
-    }
+
+    res.writeHead(404);
+    res.end("Resource not found");
 }
