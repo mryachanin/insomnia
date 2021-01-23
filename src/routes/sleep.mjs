@@ -1,19 +1,24 @@
+import moment from 'moment';
 import db from '../db.mjs';
 
 function start() {
-    console.log("Sleep timer started");
+    var now = new moment();
+    console.log(`Sleep timer started at ${now}`);
 }
 
 function stop() {
-    console.log("Sleep timer stopped");
+    var now = new moment();
+    console.log(`Sleep timer stopped at ${now}`);
 }
 
 function interrupt() {
-    console.log("Sleep timer interrupted");
+    var now = new moment();
+    console.log(`Sleep timer interrupted at ${now}`);
 }
 
 function rate(rating) {
-    console.log(`Sleep timer rated: ${rating}`);
+    var now = new moment();
+    console.log(`Sleep timer rated "${rating}" at ${now}`);
 }
 
 var sleep = {
