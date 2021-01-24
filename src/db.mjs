@@ -11,6 +11,12 @@ const db = new Client({
     port: config.sql_port,
     database: config.sql_db
 });
-await db.connect();
+await db.connect(err => {
+    if (err) {
+      console.error('Connection error to pg database', err.stack);
+    } else {
+      console.log('Connected to pg database');
+    }
+  });
 
 export default db;
