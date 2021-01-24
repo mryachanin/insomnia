@@ -6,12 +6,18 @@ console.log(`Starting server on host "${config.host}" and port "${config.port}"`
 http.createServer(reqHandler).listen(config.port, config.host);
 console.log(`Server started`);
 
-function reqHandler(req, res) {
+async function reqHandler(req, res) {
     console.log(`Received request at path: ${req.url}`);
 
     var url = new URL(req.url, `http://${req.headers.host}`);
     if (url.pathname == "/start") {
-        sleep.start();
+        var err = await sleep.start();
+        if (!!err) {
+            res.writeHead(err.code);
+            res.end(err.message);
+            return;
+        }
+
         res.writeHead(200);
         res.end();
         return;
