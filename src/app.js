@@ -24,7 +24,13 @@ async function reqHandler(req, res) {
     }
 
     if (url.pathname == "/stop") {
-        sleep.stop();
+        var err = await sleep.stop();
+        if (!!err) {
+            res.writeHead(err.code);
+            res.end(err.message);
+            return;
+        }
+
         res.writeHead(200);
         res.end();
         return;

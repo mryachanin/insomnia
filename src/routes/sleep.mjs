@@ -19,9 +19,22 @@ async function start() {
         .then(result => console.log(`Sleep timer started at ${now}`));
 }
 
-function stop() {
+async function stop() {
+    var lastRecord = await getLastRecord();
+
+    // todo: address race condition here between check and save
+    if (!!lastRecord.wake_time) {
+        console.log(`Error: Cannot record waking up twice in a row for the same sleep activity. id of ${lastRecord.id} already has a wake time`);
+        return {
+            "code": 400,
+            "message": `Cannot record waking up twice in a row for the same sleep activity.`
+        }
+    }
+
     var now = dayjs();
-    console.log(`Sleep timer stopped at ${now}`);
+    await db.query('UPDATE activity SET wake_time = $1 where id = $2', [now.format(), lastRecord.id])
+        .catch(e => console.error(e.stack))
+        .then(result => console.log(`Sleep timer stopped at ${now}`));
 }
 
 function interrupt() {
