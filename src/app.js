@@ -51,7 +51,13 @@ async function reqHandler(req, res) {
             return;
         }
 
-        sleep.rate(url.searchParams.get('quality'));
+        var err = await sleep.rate(url.searchParams.get('quality'));
+        if (!!err) {
+            res.writeHead(err.code);
+            res.end(err.message);
+            return;
+        }
+
         res.writeHead(200);
         res.end();
         return;

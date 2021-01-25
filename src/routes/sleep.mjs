@@ -42,9 +42,29 @@ function interrupt() {
     console.log(`Sleep timer interrupted at ${now}`);
 }
 
-function rate(rating) {
+async function rate(rating) {
+    if (rating < 1 || rating > 5) {
+        console.log(`Error: sleep rating must be between 1 and 5 inclusive. Rating ${rating}`);
+        return {
+            "code": 400,
+            "message": `Error: sleep rating must be between 1 and 5 inclusive.`
+        }
+    }
+
+    var lastRecord = await getLastRecord();
     var now = dayjs();
-    console.log(`Sleep timer rated "${rating}" at ${now}`);
+
+    if (!!lastRecord && !!lastRecord.sleep_rating && !!lastRecord.wake_time && now.diff(lastRecord.wake_time, "minute") > 5) {
+        console.log(`Error: Cannot override sleep rating 5 minutes after waking up. id of ${lastRecord.id} already has a rating and wake up time of ${dayjs(lastRecord.wake_time).format()}`);
+        return {
+            "code": 400,
+            "message": `Cannot override sleep rating 5 minutes after waking up.`
+        }
+    }
+
+    await db.query('UPDATE activity SET sleep_rating = $1 where id = $2', [rating, lastRecord.id])
+        .catch(e => console.error(e.stack))
+        .then(result => console.log(`Sleep timer rated "${rating}" at ${now}`));
 }
 
 async function getLastRecord() {
