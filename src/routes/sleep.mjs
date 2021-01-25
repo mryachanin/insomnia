@@ -49,7 +49,7 @@ async function interrupt() {
         }
     }
 
-    var lastInterrupt = await db.query(`select * from interruptions where sleep_id = $1 order by id desc limit 1`, [lastRecord.id])
+    var lastInterrupt = await db.query(`select * from interruption where sleep_id = $1 order by id desc limit 1`, [lastRecord.id])
         .catch(e => console.error(e.stack));
     var now = dayjs();
     var lastInterruptTime = !!lastInterrupt.rows[0] && lastInterrupt.rows[0].interrupt_time;
@@ -65,7 +65,7 @@ async function interrupt() {
         }
     }
 
-    await db.query('INSERT into interruptions(sleep_id, interrupt_time) VALUES($1, $2)', [lastRecord.id, now.format()])
+    await db.query('INSERT into interruption(sleep_id, interrupt_time) VALUES($1, $2)', [lastRecord.id, now.format()])
         .catch(e => console.error(e.stack))
         .then(result => console.log(`Sleep timer interrupted at ${now}`));
 }
