@@ -37,9 +37,37 @@ async function stop() {
         .then(result => console.log(`Sleep timer stopped at ${now}`));
 }
 
-function interrupt() {
+async function interrupt() {
+    var lastRecord = await getLastRecord();
+
+    // todo: address race condition here between check and save
+    if (!!lastRecord.wake_time) {
+        console.log(`Error: Cannot interrupt sleep after having already woken. id of ${lastRecord.id} already has a wake time`);
+        return {
+            "code": 400,
+            "message": `Cannot interrupt sleep after having already woken.`
+        }
+    }
+
+    var lastInterrupt = await db.query(`select * from interruptions where sleep_id = $1 order by id desc limit 1`, [lastRecord.id])
+        .catch(e => console.error(e.stack));
     var now = dayjs();
-    console.log(`Sleep timer interrupted at ${now}`);
+    var lastInterruptTime = !!lastInterrupt.rows[0] && lastInterrupt.rows[0].interrupt_time;
+    var timeSinceLastInterrupt = !!lastInterruptTime ?
+        now.diff(lastInterruptTime, "minute") :
+        Number.MAX_SAFE_INTEGER;
+
+    if (timeSinceLastInterrupt < 5) {
+        console.log(`Error: Sleep was already registered as interrupted less than 5 minutes ago. Current time: ${now.format()}. Last interrupt time: ${dayjs(lastInterruptTime).format()}. Diff: ${timeSinceLastInterrupt}`);
+        return {
+            "code": 400,
+            "message": `Chill my dude. An interruption was recorded ${timeSinceLastInterrupt} minutes ago.`
+        }
+    }
+
+    await db.query('INSERT into interruptions(sleep_id, interrupt_time) VALUES($1, $2)', [lastRecord.id, now.format()])
+        .catch(e => console.error(e.stack))
+        .then(result => console.log(`Sleep timer interrupted at ${now}`));
 }
 
 async function rate(rating) {

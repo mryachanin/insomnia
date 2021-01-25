@@ -37,7 +37,13 @@ async function reqHandler(req, res) {
     }
 
     if (url.pathname == "/interrupt") {
-        sleep.interrupt();
+        var err = await sleep.interrupt();
+        if (!!err) {
+            res.writeHead(err.code);
+            res.end(err.message);
+            return;
+        }
+
         res.writeHead(200);
         res.end();
         return;
