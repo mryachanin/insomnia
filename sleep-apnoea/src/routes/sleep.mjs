@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import _ from 'underscore'
-import db from '../db.mjs';
 
-async function start() {
-    var lastRecord = await getLastRecord();
+async function start(db) {
+    var lastRecord = await getLastRecord(db);
 
     if (!lastRecord.wake_time) {
         console.log(`Error: Cannot create a new sleep record twice in a row. id of ${lastRecord.id} does not have a wake time`);
@@ -18,8 +17,8 @@ async function start() {
         .then(result => console.log(`Sleep timer started at ${now}`));
 }
 
-async function stop() {
-    var lastRecord = await getLastRecord();
+async function stop(db) {
+    var lastRecord = await getLastRecord(db);
 
     // todo: address race condition here between check and save
     if (!!lastRecord.wake_time) {
@@ -36,8 +35,8 @@ async function stop() {
         .then(result => console.log(`Sleep timer stopped at ${now}`));
 }
 
-async function interrupt() {
-    var lastRecord = await getLastRecord();
+async function interrupt(db) {
+    var lastRecord = await getLastRecord(db);
 
     // todo: address race condition here between check and save
     if (!!lastRecord.wake_time) {
@@ -69,7 +68,7 @@ async function interrupt() {
         .then(result => console.log(`Sleep timer interrupted at ${now}`));
 }
 
-async function rate(rating) {
+async function rate(db, rating) {
     if (rating < 1 || rating > 5) {
         console.log(`Error: sleep rating must be between 1 and 5 inclusive. Rating ${rating}`);
         return {
@@ -78,7 +77,7 @@ async function rate(rating) {
         }
     }
 
-    var lastRecord = await getLastRecord();
+    var lastRecord = await getLastRecord(db);
     var now = dayjs();
 
     if (!!lastRecord && !!lastRecord.sleep_rating && !!lastRecord.wake_time && now.diff(lastRecord.wake_time, "minute") > 5) {
@@ -94,7 +93,7 @@ async function rate(rating) {
         .then(result => console.log(`Sleep timer rated "${rating}" at ${now}`));
 }
 
-async function getLastRecord() {
+async function getLastRecord(db) {
     var lastRecord = await db.query('select * from activity order by id desc limit 1')
         .catch(e => console.error(e.stack));
     return lastRecord.rows[0];
