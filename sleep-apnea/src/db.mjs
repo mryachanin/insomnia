@@ -4,12 +4,13 @@ import config from './config.mjs';
 const { Client } = pg;
 var database = null;
 
-function instance() {
+async function instance() {
   if (!!database) {
     return database;
   }
 
-  return initialize();
+  await initialize();
+  return database;
 }
 
 async function initialize() {
