@@ -22,7 +22,7 @@ async function initialize() {
       database: config.sql_db
   });
   await database.connect(err => {
-      if (err) {
+      if (!!err) {
         console.error('Connection error to pg database', err.stack);
         throw err;
       } else {

@@ -1,0 +1,3 @@
+FROM postgres
+
+COPY ./amnesia/create_db.sql /docker-entrypoint-initdb.d/

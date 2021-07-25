@@ -1,0 +1,15 @@
+FROM node:16
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY ./sleep-apnea/src/ ./
+
+# Install app dependencies
+COPY ./package.json ./
+ENV NODE_ENV="development"
+RUN npm install
+
+EXPOSE 8080
+CMD [ "node", "app.js" ]

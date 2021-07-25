@@ -1,4 +1,4 @@
 export NODE_ENV="development"
 
-cd "sleep-apnoea/src/"
+cd "sleep-apnea/src/"
 node app.js

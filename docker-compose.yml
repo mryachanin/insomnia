@@ -1,0 +1,21 @@
+services:
+  amnesia:
+    build:
+      context: ${PWD}
+      dockerfile: Dockerfile.amnesia
+    hostname: amnesia
+    env_file:
+      - ./amnesia/database.env
+    ports:
+      - 5434:5432
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    restart: unless-stopped
+  sleep-apnea:
+    depends_on:
+      - amnesia
+    build:
+      context: ${PWD}
+      dockerfile: Dockerfile.sleep-apnea
+volumes:
+  database-data:

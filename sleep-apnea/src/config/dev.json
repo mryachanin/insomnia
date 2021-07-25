@@ -3,7 +3,7 @@
     "port": 8080,
     "sql_user": "postgres",
     "sql_password": "pg",
-    "sql_host": "localhost",
+    "sql_host": "amnesia",
     "sql_port": 5432,
     "sql_db": "insomnia"
 }
