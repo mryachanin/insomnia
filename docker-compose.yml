@@ -17,5 +17,7 @@ services:
     build:
       context: ${PWD}
       dockerfile: Dockerfile.sleep-apnea
+    ports:
+      - 8080:8080
 volumes:
   database-data:
