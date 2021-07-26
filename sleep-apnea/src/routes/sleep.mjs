@@ -4,7 +4,7 @@ import _ from 'underscore'
 async function start(db) {
     var lastRecord = await getLastRecord(db);
 
-    if (!lastRecord.wake_time) {
+    if (!!lastRecord && !lastRecord.wake_time) {
         console.log(`Error: Cannot create a new sleep record twice in a row. id of ${lastRecord.id} does not have a wake time`);
         return {
             "code": 400,
@@ -19,6 +19,15 @@ async function start(db) {
 
 async function stop(db) {
     var lastRecord = await getLastRecord(db);
+
+    if (!lastRecord)
+    {
+        console.log(`Error: Cannot stop sleep before starting any tracking.`);
+        return {
+            "code": 400,
+            "message": `Cannot stop sleep before starting any tracking`
+        }
+    }
 
     // todo: address race condition here between check and save
     if (!!lastRecord.wake_time) {
@@ -38,6 +47,15 @@ async function stop(db) {
 async function interrupt(db) {
     var lastRecord = await getLastRecord(db);
 
+    if (!lastRecord)
+    {
+        console.log(`Error: Cannot interrupt sleep before starting any tracking.`);
+        return {
+            "code": 400,
+            "message": `Cannot interrupt sleep before starting any tracking`
+        }
+    }
+
     // todo: address race condition here between check and save
     if (!!lastRecord.wake_time) {
         console.log(`Error: Cannot interrupt sleep after having already woken. id of ${lastRecord.id} already has a wake time`);
@@ -50,7 +68,7 @@ async function interrupt(db) {
     var lastInterrupt = await db.query(`select * from interruption where sleep_id = $1 order by id desc limit 1`, [lastRecord.id])
         .catch(e => console.error(e.stack));
     var now = dayjs();
-    var lastInterruptTime = !!lastInterrupt.rows[0] && lastInterrupt.rows[0].interrupt_time;
+    var lastInterruptTime = !!lastInterrupt && !!lastInterrupt.rows[0] && lastInterrupt.rows[0].interrupt_time;
     var timeSinceLastInterrupt = !!lastInterruptTime ?
         now.diff(lastInterruptTime, "minute") :
         Number.MAX_SAFE_INTEGER;
@@ -69,6 +87,18 @@ async function interrupt(db) {
 }
 
 async function rate(db, rating) {
+    var lastRecord = await getLastRecord(db);
+    var now = dayjs();
+
+    if (!lastRecord)
+    {
+        console.log(`Error: Cannot rate sleep before starting any tracking.`);
+        return {
+            "code": 400,
+            "message": `Cannot rate sleep before starting any tracking`
+        }
+    }
+
     if (rating < 1 || rating > 5) {
         console.log(`Error: sleep rating must be between 1 and 5 inclusive. Rating ${rating}`);
         return {
@@ -77,10 +107,7 @@ async function rate(db, rating) {
         }
     }
 
-    var lastRecord = await getLastRecord(db);
-    var now = dayjs();
-
-    if (!!lastRecord && !!lastRecord.sleep_rating && !!lastRecord.wake_time && now.diff(lastRecord.wake_time, "minute") > 5) {
+    if (!!lastRecord.sleep_rating && !!lastRecord.wake_time && now.diff(lastRecord.wake_time, "minute") > 5) {
         console.log(`Error: Cannot override sleep rating 5 minutes after waking up. id of ${lastRecord.id} already has a rating and wake up time of ${dayjs(lastRecord.wake_time).format()}`);
         return {
             "code": 400,
@@ -96,7 +123,7 @@ async function rate(db, rating) {
 async function getLastRecord(db) {
     var lastRecord = await db.query('select * from activity order by id desc limit 1')
         .catch(e => console.error(e.stack));
-    return lastRecord.rows[0];
+    return !!lastRecord ? lastRecord.rows[0] : null;
 }
 
 var sleep = {

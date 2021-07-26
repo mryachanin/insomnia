@@ -1,8 +1,8 @@
-CREATE DATABASE insomnia
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    CONNECTION LIMIT = -1;
+-- CREATE DATABASE insomnia
+--     WITH
+--     OWNER = postgres
+--     ENCODING = 'UTF8'
+--     CONNECTION LIMIT = -1;
 
 CREATE TABLE public.activity
 (
