@@ -1,8 +1,6 @@
 services:
   amnesia:
-    build:
-      context: ${PWD}
-      dockerfile: Dockerfile.amnesia
+    image: ghcr.io/mryachanin/amnesia:main
     hostname: amnesia
     env_file:
       - ./amnesia/database.env
@@ -14,9 +12,7 @@ services:
   sleep-apnea:
     depends_on:
       - amnesia
-    build:
-      context: ${PWD}
-      dockerfile: Dockerfile.sleep-apnea
+    image: ghcr.io/mryachanin/sleep-apnea:main
     ports:
       - 8080:8080
 volumes:
