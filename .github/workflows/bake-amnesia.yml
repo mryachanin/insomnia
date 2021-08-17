@@ -47,13 +47,10 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
-      # https://docs.docker.com/engine/reference/commandline/buildx_build/
-      - name: Build and push Docker image
+      - name: Build and push
         if: ${{ github.event_name != 'pull_request' }}
-        run: |        
-          docker buildx build \
-            --platform ${TARGET_PLATFORMS} \
-            --tag ${{ steps.meta.outputs.tags }} \
-            --file Dockerfile.${IMAGE_NAME} \
-            --push \
-            .
+        uses: docker/build-push-action@v2
+        with:
+          platforms: ${{ env.TARGET_PLATFORMS }}
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
