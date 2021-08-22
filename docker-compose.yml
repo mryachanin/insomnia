@@ -14,6 +14,6 @@ services:
       - amnesia
     image: ghcr.io/mryachanin/sleep-apnea:main
     ports:
-      - 8080:8080
+      - 0.0.0.0:8080:8080
 volumes:
   database-data:
