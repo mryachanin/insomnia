@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY ./trigger-warning/pi/ ./
+
+# Install app dependencies
+RUN apk add --update --no-cache python3 py3-pip
+RUN ln -sf python3 /usr/bin/python
+RUN pip3 install --no-cache --upgrade gpiozero
+
+# Run the app
+CMD [ "python3", "app.py" ]

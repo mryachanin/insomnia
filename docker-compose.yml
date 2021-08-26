@@ -15,5 +15,9 @@ services:
     image: ghcr.io/mryachanin/sleep-apnea:main
     ports:
       - 0.0.0.0:8080:8080
+  pi-trigger-warning:
+    depends_on:
+      - sleep-apnea
+    image: ghcr.io/mryachanin/pi-trigger-warning:main
 volumes:
   database-data:
