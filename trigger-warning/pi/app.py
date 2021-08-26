@@ -6,7 +6,7 @@ import urllib.error
 import urllib.request
 import urllib.parse
 
-import RPi.GPIO as GPIO
+from gpiozero import Button
 
 base_url = 'http://localhost:8080/'
 start_url = base_url + 'start'
@@ -22,11 +22,10 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(on_off_gpio, GPIO.IN)
-GPIO.setup(interrupt_gpio, GPIO.IN)
+on_off_button = Button(on_off_gpio)
+interrupt_button = Button(interrupt_gpio)
 
-on_off_last = GPIO.input(on_off_gpio)
+on_off_last = on_off_button.is_pressed
 
 def exec_request(url):
     try:
@@ -36,7 +35,7 @@ def exec_request(url):
         logging.error(e)
 
 while True:
-    on_off_state = GPIO.input(on_off_gpio)
+    on_off_state = on_off_button.is_pressed
     if on_off_state != on_off_last:
         if on_off_state:
             logging.info('Start sleep tracking')
@@ -47,7 +46,7 @@ while True:
         on_off_last = on_off_state
         time.sleep(switch_max_rate_in_seconds)
 
-    interrupt_state = GPIO.input(interrupt_gpio)
+    interrupt_state = interrupt_button.is_pressed
     if not interrupt_state:
         logging.info('Interrupt sleep tracking')
         exec_request(interrupt_url)
