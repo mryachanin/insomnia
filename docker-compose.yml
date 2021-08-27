@@ -19,5 +19,7 @@ services:
     depends_on:
       - sleep-apnea
     image: ghcr.io/mryachanin/pi-trigger-warning:main
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
 volumes:
   database-data:
