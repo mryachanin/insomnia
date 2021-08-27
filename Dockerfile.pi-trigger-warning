@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM debian:latest
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -7,9 +7,10 @@ WORKDIR /usr/src/app
 COPY ./trigger-warning/pi/ ./
 
 # Install app dependencies
-RUN apk add --update --no-cache python3 py3-pip
+RUN apt update && apt upgrade --yes
+RUN apt install --yes python3 python3-pip
 RUN ln -sf python3 /usr/bin/python
-RUN pip3 install --no-cache --upgrade gpiozero
+RUN pip3 install --upgrade gpiozero
 
 # Run the app
 CMD [ "python3", "app.py" ]
