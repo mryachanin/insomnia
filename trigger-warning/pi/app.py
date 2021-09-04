@@ -21,6 +21,7 @@ interrupt_url = base_url + 'interrupt'
 on_off_gpio = 18
 interrupt_gpio = 4
 switch_max_rate_in_seconds = 1
+loop_max_rate_in_seconds = .001
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -51,8 +52,9 @@ while True:
         on_off_last = on_off_state
         time.sleep(switch_max_rate_in_seconds)
 
-    interrupt_state = interrupt_button.is_pressed
-    if interrupt_state:
+    if on_off_last and interrupt_button.is_pressed:
         logging.info('Interrupt sleep tracking')
         exec_request(interrupt_url)
         time.sleep(switch_max_rate_in_seconds)
+
+    time.sleep(loop_max_rate_in_seconds)
