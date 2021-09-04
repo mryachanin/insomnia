@@ -10,7 +10,8 @@ COPY ./trigger-warning/pi/ ./
 RUN apt update && apt upgrade --yes
 RUN apt install --yes python3 python3-pip
 RUN ln -sf python3 /usr/bin/python
-RUN pip3 install --upgrade gpiozero pigpio
+RUN pip3 install --upgrade gpiozero lgpio
 
 # Run the app
+ENV GPIOZERO_PIN_FACTORY=lgpio
 CMD [ "python3", "app.py" ]
