@@ -52,7 +52,7 @@ while True:
         time.sleep(switch_max_rate_in_seconds)
 
     interrupt_state = interrupt_button.is_pressed
-    if not interrupt_state:
+    if interrupt_state:
         logging.info('Interrupt sleep tracking')
         exec_request(interrupt_url)
         time.sleep(switch_max_rate_in_seconds)
