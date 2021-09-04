@@ -20,8 +20,9 @@ services:
       - sleep-apnea
     image: ghcr.io/mryachanin/pi-trigger-warning:main
     devices:
-      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/gpiomem"
     volumes:
       - "/sys/class/gpio:/sys/class/gpio"
+      - "/sys/devices:/sys/devices"
 volumes:
   database-data:
