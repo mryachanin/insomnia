@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import logging
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -8,7 +9,11 @@ import urllib.parse
 
 from gpiozero import Button
 
-base_url = 'http://localhost:8080/'
+host = "sleep-apnea"
+if len(sys.argv) == 2:
+    host = sys.argv[1]
+
+base_url = 'http://{}:8080/'.format(host)
 start_url = base_url + 'start'
 stop_url = base_url + 'stop'
 interrupt_url = base_url + 'interrupt'
