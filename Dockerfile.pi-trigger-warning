@@ -1,4 +1,4 @@
-FROM ubuntu:rolling
+FROM python:3.7-buster
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -12,10 +12,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install app dependencies
 RUN apt update && apt upgrade --yes
-RUN apt install --yes python3 python3-pip python3-lgpio
+RUN apt install --yes python3 python3-pip
 RUN ln -sf python3 /usr/bin/python
-RUN pip3 install --upgrade gpiozero
+RUN pip install --extra-index-url https://www.piwheels.org/simple --upgrade gpiozero RPi.GPIO
 
 # Run the app
-ENV GPIOZERO_PIN_FACTORY=lgpio
+ENV GPIOZERO_PIN_FACTORY=rpigpio
 CMD [ "python3", "app.py" ]
