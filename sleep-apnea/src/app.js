@@ -16,8 +16,8 @@ async function reqHandler(req, res) {
     if (url.pathname == "/start") {
         var err = await sleep.start(database);
         if (!!err) {
-            res.writeHead(err.code);
-            res.end(err.message);
+            res.writeHead(err.code, err.message);
+            res.end();
             return;
         }
 
@@ -29,8 +29,8 @@ async function reqHandler(req, res) {
     if (url.pathname == "/stop") {
         var err = await sleep.stop(database);
         if (!!err) {
-            res.writeHead(err.code);
-            res.end(err.message);
+            res.writeHead(err.code, err.message);
+            res.end();
             return;
         }
 
@@ -42,8 +42,8 @@ async function reqHandler(req, res) {
     if (url.pathname == "/interrupt") {
         var err = await sleep.interrupt(database);
         if (!!err) {
-            res.writeHead(err.code);
-            res.end(err.message);
+            res.writeHead(err.code, err.message);
+            res.end();
             return;
         }
 
@@ -62,8 +62,8 @@ async function reqHandler(req, res) {
 
         var err = await sleep.rate(database, url.searchParams.get('quality'));
         if (!!err) {
-            res.writeHead(err.code);
-            res.end(err.message);
+            res.writeHead(err.code, err.message);
+            res.end();
             return;
         }
 
