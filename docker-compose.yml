@@ -24,7 +24,6 @@ services:
     volumes:
       - "/sys/class/gpio:/sys/class/gpio"
       - "/sys/devices:/sys/devices"
-      - "/dev/"
     privileged: true
 volumes:
   database-data:
